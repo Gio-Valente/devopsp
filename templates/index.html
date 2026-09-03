@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cãotinho</title>
+</head>
+
+<body>
+    <h1>Cãotinho</h1>
+    <p>Sistema básico de gestão para creche de cães.</p>
+    <h2>Cadastrar tutor</h2>
+    <form action="/cadastrar-tutor" method="POST">
+        <label>Nome:</label>
+        <input type="text" name="nome" required>
+        <br><br>
+        <label>Telefone:</label>
+        <input
+            type="tel"
+            name="telefone"
+            id="telefone"
+            placeholder="(00) 00000-0000"
+            maxlength="15"
+            required
+        >
+        <br><br>
+        <label>E-mail:</label>
+        <input type="email" name="email" required>
+        <br><br>
+        <button type="submit">
+            Cadastrar tutor
+        </button>
+    </form>
+
+    <h2>Tutores cadastrados</h2>
+    {% if tutores %}
+        <ul>
+            {% for tutor in tutores %}
+                <li>
+                    {{ tutor.nome }} -
+                    {{ tutor.telefone }} -
+                    {{ tutor.email }}
+                </li>
+
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nenhum tutor cadastrado.</p>
+    {% endif %}
+    <script>
+    const telefone = document.getElementById("telefone");
+
+    telefone.addEventListener("input", function () {
+        let numero = telefone.value.replace(/\D/g, "");
+
+        numero = numero.substring(0, 11);
+
+        if (numero.length > 10) {
+            numero = numero.replace(
+                /^(\d{2})(\d{5})(\d{4})$/,
+                "($1) $2-$3"
+            );
+        } else if (numero.length > 6) {
+            numero = numero.replace(
+                /^(\d{2})(\d{4,5})(\d{0,4})$/,
+                "($1) $2-$3"
+            );
+        } else if (numero.length > 2) {
+            numero = numero.replace(
+                /^(\d{2})(\d+)/,
+                "($1) $2"
+            );
+        } else if (numero.length > 0) {
+            numero = numero.replace(
+                /^(\d*)/,
+                "($1"
+            );
+        }
+
+        telefone.value = numero;
+    });
+    </script>
+</body>
+</html>
