@@ -47,6 +47,72 @@
     {% else %}
         <p>Nenhum tutor cadastrado.</p>
     {% endif %}
+
+    <hr>
+
+    <h2>Cadastrar au-luno</h2>
+    {% if tutores %}
+        <form action="/cadastrar-aluno" method="POST">
+            <label>Nome:</label>
+            <input type="text" name="nome_aluno" required>
+            <br><br>
+            <label>Raça:</label>
+            <input type="text" name="raca" required>
+            <br><br>
+            <label>Idade:</label>
+            <input
+                type="number"
+                name="idade"
+                min="0"
+                max="30"
+                required
+            >
+            <br><br>
+            <label>Porte:</label>
+            <select name="porte" required>
+                <option value="">Selecione</option>
+                <option value="Pequeno">Pequeno</option>
+                <option value="Médio">Médio</option>
+                <option value="Grande">Grande</option>
+            </select>
+            <br><br>
+            <label>Tutor responsável:</label>
+            <select name="tutor" required>
+                <option value="">Selecione o tutor</option>
+                {% for tutor in tutores %}
+                    <option value="{{ tutor.email }}">
+                        {{ tutor.nome }} - {{ tutor.email }}
+                    </option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <button type="submit">
+                Cadastrar au-luno
+            </button>
+        </form>
+    {% else %}
+        <p>
+            Cadastre um tutor antes de cadastrar um au-luno.
+        </p>
+    {% endif %}
+
+    <h2>Au-lunos cadastrados</h2>
+    {% if alunos %}
+        <ul>
+            {% for aluno in alunos %}
+                <li>
+                    <strong>{{ aluno.nome }}</strong>
+                    - {{ aluno.raca }}
+                    - {{ aluno.idade }} anos
+                    - Porte {{ aluno.porte }}
+                    - Tutor: {{ aluno.tutor }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nenhum au-luno cadastrado.</p>
+    {% endif %}
+
     <script>
     const telefone = document.getElementById("telefone");
 
