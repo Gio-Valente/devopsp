@@ -1,0 +1,35 @@
+name: CD
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  delivery:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar codigo do repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: python -m pip install -r requirements.txt
+
+      - name: Preparar pacote da aplicacao
+        run: |
+          mkdir pacote
+          cp app.py pacote/
+          cp requirements.txt pacote/
+          cp -r templates pacote/
+
+      - name: Publicar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: caotinho-aplicacao
+          path: pacote/
