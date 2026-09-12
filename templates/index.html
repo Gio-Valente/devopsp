@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cãotinho</title>
+</head>
+
+<body>
+    <h1>Cãotinho</h1>
+    <p>Sistema básico de gestão para creche de cães.</p>
+    <h2>Cadastrar tutor</h2>
+    <form action="/cadastrar-tutor" method="POST">
+        <label>Nome:</label>
+        <input type="text" name="nome" required>
+        <br><br>
+        <label>Telefone:</label>
+        <input
+            type="tel"
+            name="telefone"
+            id="telefone"
+            placeholder="(00) 00000-0000"
+            maxlength="15"
+            required
+        >
+        <br><br>
+        <label>E-mail:</label>
+        <input type="email" name="email" required>
+        <br><br>
+        <button type="submit">
+            Cadastrar tutor
+        </button>
+    </form>
+
+    <h2>Tutores cadastrados</h2>
+    {% if tutores %}
+        <ul>
+            {% for tutor in tutores %}
+                <li>
+                    {{ tutor.nome }} -
+                    {{ tutor.telefone }} -
+                    {{ tutor.email }}
+                </li>
+
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nenhum tutor cadastrado.</p>
+    {% endif %}
+
+    <hr>
+
+    <h2>Cadastrar au-luno</h2>
+    {% if tutores %}
+        <form action="/cadastrar-aluno" method="POST">
+            <label>Nome:</label>
+            <input type="text" name="nome_aluno" required>
+            <br><br>
+            <label>Raça:</label>
+            <input type="text" name="raca" required>
+            <br><br>
+            <label>Idade:</label>
+            <input
+                type="number"
+                name="idade"
+                min="0"
+                max="30"
+                required
+            >
+            <br><br>
+            <label>Porte:</label>
+            <select name="porte" required>
+                <option value="">Selecione</option>
+                <option value="Pequeno">Pequeno</option>
+                <option value="Médio">Médio</option>
+                <option value="Grande">Grande</option>
+            </select>
+            <br><br>
+            <label>Tutor responsável:</label>
+            <select name="tutor" required>
+                <option value="">Selecione o tutor</option>
+                {% for tutor in tutores %}
+                    <option value="{{ tutor.email }}">
+                        {{ tutor.nome }} - {{ tutor.email }}
+                    </option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <button type="submit">
+                Cadastrar au-luno
+            </button>
+        </form>
+    {% else %}
+        <p>
+            Cadastre um tutor antes de cadastrar um au-luno.
+        </p>
+    {% endif %}
+
+    <h2>Au-lunos cadastrados</h2>
+    {% if alunos %}
+        <ul>
+            {% for aluno in alunos %}
+                <li>
+                    <strong>{{ aluno.nome }}</strong>
+                    - {{ aluno.raca }}
+                    - {{ aluno.idade }} anos
+                    - Porte {{ aluno.porte }}
+                    - Tutor: {{ aluno.tutor }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nenhum au-luno cadastrado.</p>
+    {% endif %}
+
+    <script>
+    const telefone = document.getElementById("telefone");
+
+    telefone.addEventListener("input", function () {
+        let numero = telefone.value.replace(/\D/g, "");
+
+        numero = numero.substring(0, 11);
+
+        if (numero.length > 10) {
+            numero = numero.replace(
+                /^(\d{2})(\d{5})(\d{4})$/,
+                "($1) $2-$3"
+            );
+        } else if (numero.length > 6) {
+            numero = numero.replace(
+                /^(\d{2})(\d{4,5})(\d{0,4})$/,
+                "($1) $2-$3"
+            );
+        } else if (numero.length > 2) {
+            numero = numero.replace(
+                /^(\d{2})(\d+)/,
+                "($1) $2"
+            );
+        } else if (numero.length > 0) {
+            numero = numero.replace(
+                /^(\d*)/,
+                "($1"
+            );
+        }
+
+        telefone.value = numero;
+    });
+    </script>
+</body>
+</html>
